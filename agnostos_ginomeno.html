@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ο Άγνωστος Πολλαπλασιάζεται!</title>
+<style>
+  :root {
+    --blue: #1a6baa;
+    --blue-light: #e8f2fb;
+    --orange: #e07b1a;
+    --orange-light: #fff3e0;
+    --green: #2e7d32;
+    --green-light: #e8f5e9;
+    --red: #c62828;
+    --red-light: #ffebee;
+    --gray: #f5f5f5;
+    --border: #d0d7de;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f0f4f8;
+    color: #1a1a2e;
+    padding: 20px;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a6baa 0%, #0d47a1 100%);
+    padding: 28px 36px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: "✕ ÷";
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 64px;
+    opacity: 0.15;
+    font-weight: bold;
+  }
+  .header .chapter-tag {
+    background: rgba(255,255,255,0.2);
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .header .subtitle {
+    font-size: 15px;
+    opacity: 0.85;
+    font-style: italic;
+  }
+
+  /* BODY CONTENT */
+  .content { padding: 32px 36px; }
+
+  /* THEORY BOX */
+  .theory-box {
+    background: var(--blue-light);
+    border-left: 5px solid var(--blue);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  .theory-box h2 {
+    color: var(--blue);
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .theory-box h2::before { content: "📘"; font-size: 18px; }
+  .theory-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .theory-card {
+    background: white;
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid #c8dff2;
+  }
+  .theory-card .label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .theory-card .formula {
+    font-size: 17px;
+    font-weight: 700;
+    color: #0d47a1;
+    font-family: 'Courier New', monospace;
+    background: var(--blue-light);
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+  .theory-card p { font-size: 13px; color: #444; }
+
+  .rule-highlight {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5d4037;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .rule-highlight::before { content: "💡"; }
+
+  /* EXERCISE SECTIONS */
+  .section {
+    margin-bottom: 32px;
+  }
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--blue-light);
+  }
+  .section-badge {
+    background: var(--blue);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+  .section-title h3 {
+    font-size: 17px;
+    color: #1a1a2e;
+  }
+
+  /* EXERCISE CARDS */
+  .exercise {
+    background: var(--gray);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .exercise:hover { border-color: var(--blue); }
+
+  .ex-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .ex-question {
+    font-size: 15px;
+    color: #222;
+    margin-bottom: 14px;
+  }
+  .ex-question strong { color: var(--blue); }
+
+  /* EQUATION GRID */
+  .eq-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .eq-item {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-family: 'Courier New', monospace;
+  }
+  .eq-item .eq-text { flex: 1; font-weight: 600; color: #1a237e; }
+  .eq-item .answer-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .eq-item input[type="text"] {
+    width: 70px;
+    padding: 5px 8px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 15px;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .eq-item input[type="text"]:focus { border-color: var(--blue); }
+  .eq-item input.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .eq-item input.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* CHECK BUTTON */
+  .check-btn {
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 9px 22px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: background 0.2s, transform 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .check-btn:hover { background: #0d47a1; transform: translateY(-1px); }
+  .check-btn:active { transform: translateY(0); }
+
+  .feedback-msg {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback-msg.correct-all { background: var(--green-light); color: var(--green); display: block; }
+  .feedback-msg.has-errors { background: var(--red-light); color: var(--red); display: block; }
+
+  /* STEPS EXERCISE */
+  .steps-grid {
+    display: grid;
+    gap: 8px;
+  }
+  .step-row {
+    display: grid;
+    grid-template-columns: 28px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .step-num {
+    background: var(--blue);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-text { font-size: 14px; color: #333; }
+  .step-input {
+    width: 90px;
+    padding: 5px 8px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    outline: none;
+    font-family: 'Courier New', monospace;
+    transition: border-color 0.2s;
+  }
+  .step-input:focus { border-color: var(--blue); }
+  .step-input.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .step-input.wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+
+  /* MCQ */
+  .mcq-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .mcq-btn {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .mcq-btn:hover { border-color: var(--blue); background: var(--blue-light); }
+  .mcq-btn.selected-correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .mcq-btn.selected-wrong { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .mcq-feedback {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: none;
+  }
+  .mcq-feedback.show { display: block; }
+  .mcq-feedback.ok { color: var(--green); }
+  .mcq-feedback.no { color: var(--red); }
+
+  /* WORD PROBLEM */
+  .problem-box {
+    background: var(--orange-light);
+    border: 1.5px solid #ffd180;
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+  }
+  .problem-box .prob-tag {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--orange);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .problem-box p { font-size: 15px; color: #333; margin-bottom: 10px; }
+  .problem-steps { margin-top: 12px; }
+  .problem-steps label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 4px;
+    margin-top: 8px;
+  }
+  .problem-steps input[type="text"] {
+    width: 100%;
+    max-width: 340px;
+    padding: 7px 12px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .problem-steps input:focus { border-color: var(--orange); }
+  .problem-steps input.correct { border-color: var(--green); background: var(--green-light); }
+  .problem-steps input.wrong { border-color: var(--red); background: var(--red-light); }
+
+  /* TRUE/FALSE */
+  .tf-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .tf-table th {
+    background: var(--blue);
+    color: white;
+    padding: 8px 12px;
+    font-size: 13px;
+    text-align: center;
+  }
+  .tf-table th:first-child { text-align: left; border-radius: 0; }
+  .tf-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .tf-table tr:nth-child(even) td { background: var(--gray); }
+  .tf-table td:last-child, .tf-table td:nth-last-child(2) { text-align: center; }
+  .tf-radio { display: flex; justify-content: center; gap: 6px; }
+  .tf-radio label {
+    cursor: pointer;
+    padding: 4px 12px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .tf-radio input { display: none; }
+  .tf-radio input:checked + label { background: var(--blue); color: white; border-color: var(--blue); }
+  .tf-result { display: none; font-size: 14px; font-weight: 600; margin-left: 8px; }
+  .tf-result.ok { color: var(--green); display: inline; }
+  .tf-result.no { color: var(--red); display: inline; }
+
+  /* PROGRESS */
+  .progress-bar {
+    margin: 0 36px 28px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), #42a5f5);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-label {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin: 6px 36px 0;
+  }
+
+  /* SCORE */
+  .score-display {
+    background: linear-gradient(135deg, #1a6baa, #0d47a1);
+    color: white;
+    margin: 28px 36px;
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .score-display .score-num { font-size: 36px; font-weight: 800; }
+  .score-display .score-label { font-size: 14px; opacity: 0.85; }
+  .score-display .score-msg { font-size: 16px; font-weight: 600; }
+
+  /* FOOTER */
+  .footer {
+    text-align: right;
+    padding: 16px 36px;
+    font-size: 12px;
+    color: #888;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .content { padding: 20px 16px; }
+    .theory-grid { grid-template-columns: 1fr; }
+    .eq-grid { grid-template-columns: 1fr; }
+    .header { padding: 20px 20px; }
+    .header h1 { font-size: 20px; }
+    .progress-bar, .progress-label, .score-display { margin-left: 16px; margin-right: 16px; }
+    .footer { padding: 12px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="chapter-tag">Μαθηματικά ΣΤ΄ Δημοτικού</div>
+    <h1>Ο Άγνωστος Πολλαπλασιάζεται!</h1>
+    <div class="subtitle">Εξισώσεις όπου ο άγνωστος είναι παράγοντας γινομένου</div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div style="margin: 24px 36px 0;">
+    <div class="progress-label" id="progressLabel">Ολοκλήρωσε τις ασκήσεις παρακάτω 🎯</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <div class="content">
+
+    <!-- THEORY -->
+    <div class="theory-box">
+      <h2>Θεωρία με μια ματιά</h2>
+      <p style="font-size:14px; color:#333;">Όταν ο <strong>άγνωστος x</strong> είναι <strong>παράγοντας γινομένου</strong>, για να βρούμε την τιμή του <strong>διαιρούμε το γινόμενο με τον γνωστό παράγοντα</strong>.</p>
+      <div class="theory-grid">
+        <div class="theory-card">
+          <div class="label">Γενική μορφή</div>
+          <div class="formula">α · x = β</div>
+          <p>Το x πολλαπλασιάζεται με τον γνωστό αριθμό α.</p>
+        </div>
+        <div class="theory-card">
+          <div class="label">Λύση</div>
+          <div class="formula">x = β ÷ α</div>
+          <p>Διαιρούμε το γινόμενο β με τον γνωστό παράγοντα α.</p>
+        </div>
+      </div>
+      <div class="rule-highlight">
+        Παράδειγμα: 7 · x = 56 → x = 56 ÷ 7 = 8 &nbsp;|&nbsp; Επαλήθευση: 7 · 8 = 56 ✓
+      </div>
+    </div>
+
+    <!-- SECTION A: Basic equations -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-badge">Α</span>
+        <h3>Λύσε τις εξισώσεις</h3>
+      </div>
+
+      <div class="exercise">
+        <div class="ex-label">Άσκηση 1 · Ακέραιοι αριθμοί</div>
+        <div class="ex-question">Βρες την τιμή του x:</div>
+        <div class="eq-grid" id="ex1-grid">
+          <div class="eq-item">
+            <span class="eq-text">4 · x = 36</span>
+            <div class="answer-box">x = <input type="text" id="ex1a" placeholder="..." data-answer="9" onkeydown="if(event.key==='Enter')checkEq('ex1a')"></div>
+          </div>
+          <div class="eq-item">
+            <span class="eq-text">7 · x = 63</span>
+            <div class="answer-box">x = <input type="text" id="ex1b" placeholder="..." data-answer="9" onkeydown="if(event.key==='Enter')checkEq('ex1b')"></div>
+          </div>
+          <div class="eq-item">
+            <span class="eq-text">x · 9 = 108</span>
+            <div class="answer-box">x = <input type="text" id="ex1c" placeholder="..." data-answer="12" onkeydown="if(event.key==='Enter')checkEq('ex1c')"></div>
+          </div>
+          <div class="eq-item">
+            <span class="eq-text">12 · x = 144</span>
+            <div class="answer-box">x = <input type="text" id="ex1d" placeholder="..." data-answer="12" onkeydown="if(event.key==='Enter')checkEq('ex1d')"></div>
+          </div>
+        </div>
+        <button class="check-btn" onclick="checkAll(['ex1a','ex1b','ex1c','ex1d'],'fb1')">✔ Έλεγχος</button>
+        <div class="feedback-msg" id="fb1"></div>
+      </div>
+
+      <div class="exercise">
+        <div class="ex-label">Άσκηση 2 · Δεκαδικοί & κλάσματα</div>
+        <div class="ex-question">Λύσε και επαλήθευσε:</div>
+        <div class="eq-grid">
+          <div class="eq-item">
+            <span class="eq-text">0,4 · x = 2,8</span>
+            <div class="answer-box">x = <input type="text" id="ex2a" placeholder="..." data-answer="7" onkeydown="if(event.key==='Enter')checkEq('ex2a')"></div>
+          </div>
+          <div class="eq-item">
+            <span class="eq-text">1,5 · x = 9</span>
+            <div class="answer-box">x = <input type="text" id="ex2b" placeholder="..." data-answer="6" onkeydown="if(event.key==='Enter')checkEq('ex2b')"></div>
+          </div>
+          <div class="eq-item">
+            <span class="eq-text">(2/3) · x = 8</span>
+            <div class="answer-box">x = <input type="text" id="ex2c" placeholder="..." data-answer="12" onkeydown="if(event.key==='Enter')checkEq('ex2c')"></div>
+          </div>
+          <div class="eq-item">
+            <span class="eq-text">x · 0,25 = 3</span>
+            <div class="answer-box">x = <input type="text" id="ex2d" placeholder="..." data-answer="12" onkeydown="if(event.key==='Enter')checkEq('ex2d')"></div>
+          </div>
+        </div>
+        <button class="check-btn" onclick="checkAll(['ex2a','ex2b','ex2c','ex2d'],'fb2')">✔ Έλεγχος</button>
+        <div class="feedback-msg" id="fb2"></div>
+      </div>
+    </div>
+
+    <!-- SECTION B: Step-by-step -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-badge">Β</span>
+        <h3>Λύσε βήμα – βήμα</h3>
+      </div>
+
+      <div class="exercise">
+        <div class="ex-label">Άσκηση 3 · Πλήρης λύση</div>
+        <div class="ex-question">Συμπλήρωσε κάθε βήμα για την εξίσωση: <strong>6 · x = 90</strong></div>
+        <div class="steps-grid">
+          <div class="step-row">
+            <div class="step-num">1</div>
+            <div class="step-text">Ο άγνωστος x είναι… (παράγοντας / αποτέλεσμα)</div>
+            <input type="text" class="step-input" id="s3a" placeholder="..." data-answer="παράγοντας" onkeydown="if(event.key==='Enter')checkStep('s3a')">
+          </div>
+          <div class="step-row">
+            <div class="step-num">2</div>
+            <div class="step-text">Κάνω την αντίστροφη πράξη: x = 90 ÷ __</div>
+            <input type="text" class="step-input" id="s3b" placeholder="..." data-answer="6" onkeydown="if(event.key==='Enter')checkStep('s3b')">
+          </div>
+          <div class="step-row">
+            <div class="step-num">3</div>
+            <div class="step-text">Άρα x = </div>
+            <input type="text" class="step-input" id="s3c" placeholder="..." data-answer="15" onkeydown="if(event.key==='Enter')checkStep('s3c')">
+          </div>
+          <div class="step-row">
+            <div class="step-num">4</div>
+            <div class="step-text">Επαλήθευση: 6 · 15 = </div>
+            <input type="text" class="step-input" id="s3d" placeholder="..." data-answer="90" onkeydown="if(event.key==='Enter')checkStep('s3d')">
+          </div>
+        </div>
+        <button class="check-btn" onclick="checkAll(['s3a','s3b','s3c','s3d'],'fb3')">✔ Έλεγχος</button>
+        <div class="feedback-msg" id="fb3"></div>
+      </div>
+    </div>
+
+    <!-- SECTION C: MCQ -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-badge">Γ</span>
+        <h3>Διάλεξε τη σωστή απάντηση</h3>
+      </div>
+
+      <div class="exercise">
+        <div class="ex-label">Άσκηση 4 · Πολλαπλή επιλογή</div>
+
+        <div style="margin-bottom: 16px;">
+          <div class="ex-question">1. Ποια εξίσωση έχει λύση x = 5;</div>
+          <div class="mcq-options">
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4a')">x · 8 = 35</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'correct','mcq4a')">x · 7 = 35</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4a')">x · 6 = 35</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4a')">x · 5 = 30</button>
+          </div>
+          <div class="mcq-feedback" id="mcq4a"></div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div class="ex-question">2. Αν 8 · x = 4, τότε x =</div>
+          <div class="mcq-options">
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4b')">2</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'correct','mcq4b')">0,5</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4b')">32</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4b')">4</button>
+          </div>
+          <div class="mcq-feedback" id="mcq4b"></div>
+        </div>
+
+        <div>
+          <div class="ex-question">3. Ποια από τις παρακάτω ΔΕΝ είναι εξίσωση με άγνωστο παράγοντα γινομένου;</div>
+          <div class="mcq-options">
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4c')">3 · x = 21</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4c')">x · 0,5 = 10</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'correct','mcq4c')">x + 7 = 15</button>
+            <button class="mcq-btn" onclick="mcqAnswer(this,'wrong','mcq4c')">(3/4) · x = 9</button>
+          </div>
+          <div class="mcq-feedback" id="mcq4c"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION D: Word problems -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-badge">Δ</span>
+        <h3>Προβλήματα με εξίσωση</h3>
+      </div>
+
+      <div class="problem-box">
+        <div class="prob-tag">🏋️ Πρόβλημα 1</div>
+        <p>Μία αθλήτρια τρέχει με σταθερή ταχύτητα και καλύπτει <strong>270 km</strong> σε κάποιες ώρες. Αν ξέρουμε ότι η ταχύτητά της είναι <strong>90 km/h</strong>, πόσες ώρες τρέχει;</p>
+        <div class="problem-steps">
+          <label>Άγνωστη ποσότητα (τι ψάχνουμε):</label>
+          <input type="text" id="p1a" placeholder="π.χ. ο αριθμός των ωρών" data-answer="ωρεσ" data-soft="true">
+          <label>Εξίσωση:</label>
+          <input type="text" id="p1b" placeholder="π.χ. 90 · x = 270" data-answer="90·x=270" data-soft="true">
+          <label>Λύση (x =):</label>
+          <input type="text" id="p1c" placeholder="..." data-answer="3">
+          <label>Επαλήθευση:</label>
+          <input type="text" id="p1d" placeholder="90 · ? = 270" data-answer="270" data-soft="true">
+        </div>
+        <button class="check-btn" onclick="checkAll(['p1c'],'fb_p1')" style="background:var(--orange)">✔ Έλεγχος αποτελέσματος</button>
+        <div class="feedback-msg" id="fb_p1"></div>
+      </div>
+
+      <div class="problem-box">
+        <div class="prob-tag">🧩 Πρόβλημα 2</div>
+        <p>Ένας πλακατζής τοποθετεί πλακάκια σε ένα δάπεδο. Κάθε σειρά έχει <strong>τον ίδιο αριθμό πλακακιών</strong>. Αν συνολικά έχει τοποθετήσει <strong>360 πλακάκια</strong> σε <strong>15 σειρές</strong>, πόσα πλακάκια έχει κάθε σειρά;</p>
+        <div class="problem-steps">
+          <label>Εξίσωση:</label>
+          <input type="text" id="p2a" placeholder="15 · x = ..." data-answer="15·x=360" data-soft="true">
+          <label>Λύση (x =):</label>
+          <input type="text" id="p2b" placeholder="..." data-answer="24">
+        </div>
+        <button class="check-btn" onclick="checkAll(['p2b'],'fb_p2')" style="background:var(--orange)">✔ Έλεγχος αποτελέσματος</button>
+        <div class="feedback-msg" id="fb_p2"></div>
+      </div>
+
+      <div class="problem-box">
+        <div class="prob-tag">🌍 Πρόβλημα 3 · Πιο σύνθετο</div>
+        <p>Ένας τετράγωνος κήπος έχει περίμετρο <strong>56 μέτρα</strong>. Ένας κηπουρός θέλει να τοποθετήσει φράχτη σε ολόκληρη την περίμετρο. Κάθε τμήμα φράχτη είναι <strong>3,5 μέτρα</strong>. Πόσα τμήματα χρειάζεται;</p>
+        <div class="problem-steps">
+          <label>Πρώτα βρες το μήκος κάθε πλευράς:</label>
+          <input type="text" id="p3a" placeholder="56 ÷ 4 = ..." data-answer="14">
+          <label>Εξίσωση για τον αριθμό τμημάτων (ολόκληρη η περίμετρος ÷ 3,5):</label>
+          <input type="text" id="p3b" placeholder="56 ÷ 3,5 = ..." data-answer="16">
+        </div>
+        <button class="check-btn" onclick="checkAll(['p3a','p3b'],'fb_p3')" style="background:var(--orange)">✔ Έλεγχος</button>
+        <div class="feedback-msg" id="fb_p3"></div>
+      </div>
+    </div>
+
+    <!-- SECTION E: True/False -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-badge">Ε</span>
+        <h3>Σωστό ή Λάθος;</h3>
+      </div>
+
+      <div class="exercise">
+        <div class="ex-label">Άσκηση 5 · Κρίσιμη σκέψη</div>
+        <div class="ex-question">Για κάθε πρόταση επίλεξε Σ (Σωστό) ή Λ (Λάθος) και κάνε κλικ για έλεγχο:</div>
+        <table class="tf-table">
+          <thead>
+            <tr><th>Πρόταση</th><th>Σ</th><th>Λ</th><th></th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Η εξίσωση 5 · x = 0 έχει λύση x = 0.</td>
+              <td><div class="tf-radio"><input type="radio" name="tf1" id="tf1s" value="S"><label for="tf1s" onclick="checkTF('tf1','S','S')">Σ</label></div></td>
+              <td><div class="tf-radio"><input type="radio" name="tf1" id="tf1l" value="L"><label for="tf1l" onclick="checkTF('tf1','L','S')">Λ</label></div></td>
+              <td><span class="tf-result" id="tf1r"></span></td>
+            </tr>
+            <tr>
+              <td>Αν x · 4 = 20, τότε x = 80.</td>
+              <td><div class="tf-radio"><input type="radio" name="tf2" id="tf2s" value="S"><label for="tf2s" onclick="checkTF('tf2','S','L')">Σ</label></div></td>
+              <td><div class="tf-radio"><input type="radio" name="tf2" id="tf2l" value="L"><label for="tf2l" onclick="checkTF('tf2','L','L')">Λ</label></div></td>
+              <td><span class="tf-result" id="tf2r"></span></td>
+            </tr>
+            <tr>
+              <td>Η αντίστροφη πράξη του πολλαπλασιασμού είναι η αφαίρεση.</td>
+              <td><div class="tf-radio"><input type="radio" name="tf3" id="tf3s" value="S"><label for="tf3s" onclick="checkTF('tf3','S','L')">Σ</label></div></td>
+              <td><div class="tf-radio"><input type="radio" name="tf3" id="tf3l" value="L"><label for="tf3l" onclick="checkTF('tf3','L','L')">Λ</label></div></td>
+              <td><span class="tf-result" id="tf3r"></span></td>
+            </tr>
+            <tr>
+              <td>Μπορεί ο άγνωστος να βρίσκεται είτε στα αριστερά είτε στα δεξιά του ×.</td>
+              <td><div class="tf-radio"><input type="radio" name="tf4" id="tf4s" value="S"><label for="tf4s" onclick="checkTF('tf4','S','S')">Σ</label></div></td>
+              <td><div class="tf-radio"><input type="radio" name="tf4" id="tf4l" value="L"><label for="tf4l" onclick="checkTF('tf4','L','S')">Λ</label></div></td>
+              <td><span class="tf-result" id="tf4r"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+
+  <!-- FOOTER -->
+  <div class="footer">© myspiderwebsite | Christina Papadimitriou</div>
+
+</div><!-- end page -->
+
+<script>
+  let totalAnswered = 0;
+  let totalItems = 0;
+
+  // Count all checkable inputs
+  window.addEventListener('load', () => {
+    totalItems = document.querySelectorAll('input[data-answer]').length + 4; // +4 TF + 3 MCQ
+    updateProgress();
+  });
+
+  function normalize(val) {
+    return val.trim().toLowerCase()
+      .replace(/\s/g,'')
+      .replace(/,/,'.')
+      .replace(/[·×*]/g,'·');
+  }
+
+  function checkEq(id) {
+    const inp = document.getElementById(id);
+    const ans = normalize(inp.value);
+    const correct = normalize(inp.dataset.answer);
+    if(!ans) return;
+    if(ans === correct) {
+      inp.className = 'correct';
+      scorePoint(id);
+    } else {
+      inp.className = 'wrong';
+    }
+  }
+
+  function checkStep(id) {
+    const inp = document.getElementById(id);
+    const ans = normalize(inp.value);
+    const correct = normalize(inp.dataset.answer);
+    if(!ans) return;
+    if(ans === correct || (inp.dataset.soft && ans.includes(correct.substring(0,3)))) {
+      inp.className = 'step-input correct';
+      scorePoint(id);
+    } else {
+      inp.className = 'step-input wrong';
+    }
+  }
+
+  const scored = new Set();
+  function scorePoint(id) {
+    if(!scored.has(id)) {
+      scored.add(id);
+      totalAnswered++;
+      updateProgress();
+    }
+  }
+
+  function checkAll(ids, fbId) {
+    let allCorrect = true;
+    ids.forEach(id => {
+      const inp = document.getElementById(id);
+      if(!inp) return;
+      const ans = normalize(inp.value);
+      const correct = normalize(inp.dataset.answer);
+      const isSoft = inp.dataset.soft === 'true';
+      if(!ans) { allCorrect = false; return; }
+      if(ans === correct || (isSoft && ans.length > 2)) {
+        inp.classList.remove('wrong');
+        inp.classList.add('correct');
+        scorePoint(id);
+      } else {
+        inp.classList.remove('correct');
+        inp.classList.add('wrong');
+        allCorrect = false;
+      }
+    });
+    const fb = document.getElementById(fbId);
+    if(allCorrect) {
+      fb.textContent = '✅ Μπράβο! Όλες οι απαντήσεις είναι σωστές!';
+      fb.className = 'feedback-msg correct-all';
+    } else {
+      fb.textContent = '❌ Κάποιες απαντήσεις χρειάζονται διόρθωση. Ξαναδές τις κόκκινες!';
+      fb.className = 'feedback-msg has-errors';
+    }
+  }
+
+  function mcqAnswer(btn, type, fbId) {
+    const container = btn.parentElement;
+    container.querySelectorAll('.mcq-btn').forEach(b => b.className = 'mcq-btn');
+    const fb = document.getElementById(fbId);
+    if(type === 'correct') {
+      btn.classList.add('selected-correct');
+      fb.textContent = '✅ Σωστά!';
+      fb.className = 'mcq-feedback show ok';
+      scorePoint(fbId);
+    } else {
+      btn.classList.add('selected-wrong');
+      fb.textContent = '❌ Λάθος, ξαναδές!';
+      fb.className = 'mcq-feedback show no';
+    }
+  }
+
+  function checkTF(name, chosen, correct) {
+    const resEl = document.getElementById(name + 'r');
+    if(chosen === correct) {
+      resEl.textContent = '✅ Σωστά!';
+      resEl.className = 'tf-result ok';
+      scorePoint(name);
+    } else {
+      resEl.textContent = '❌ Λάθος!';
+      resEl.className = 'tf-result no';
+    }
+  }
+
+  function updateProgress() {
+    const pct = Math.min(100, Math.round((totalAnswered / totalItems) * 100));
+    document.getElementById('progressFill').style.width = pct + '%';
+    if(pct === 0) {
+      document.getElementById('progressLabel').textContent = 'Ολοκλήρωσε τις ασκήσεις παρακάτω 🎯';
+    } else if(pct < 100) {
+      document.getElementById('progressLabel').textContent = `Πρόοδος: ${pct}% — Συνέχισε! 💪`;
+    } else {
+      document.getElementById('progressLabel').textContent = '🎉 Τέλεια! Ολοκλήρωσες το φυλλάδιο!';
+    }
+  }
+</script>
+</body>
+</html>
